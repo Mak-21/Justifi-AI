@@ -13,6 +13,59 @@ app.use(express.json());
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+exports.handler = async function(event, context) {
+  // Set CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+  
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
+  try {
+    // Parse request body
+    const { prompt } = JSON.parse(event.body);
+    
+    // Initialize Gemini API
+    const apiKey = process.env.GEMINI_API_KEY;
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    
+    // Create system prompt
+    const legalPrompt = `You are Juris, a legal AI assistant specializing in US federal law. 
+    Provide accurate, helpful information about legal questions. 
+    Format your responses using Markdown for clarity. 
+    If you're unsure about something, be transparent about limitations.
+    
+    User question: ${prompt}`;
+    
+    // Generate content
+    const result = await model.generateContent(legalPrompt);
+    const response = result.response;
+    const text = response.text();
+    
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(text)
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Failed to process request' })
+    };
+  }
+};
 app.post('/api/chat', async (req, res) => {
   try {
     const { prompt } = req.body;

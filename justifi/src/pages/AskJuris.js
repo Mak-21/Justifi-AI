@@ -24,12 +24,12 @@ const AskJuris = () => {
     setIsLoading(true);
 
     try {
-      // Send the user's input to the backend API
-      const response = await axios.post("http://localhost:5000/api/chat", {
+      // Use serverless function endpoint
+      const response = await axios.post('/.netlify/functions/chat', {
         prompt: input,
       });
-
-      // Add the bot's response to the chat, but don't scroll
+    
+      // Add the bot's response to the chat
       setShouldScroll(false);
       const botMessage = {
         text: response.data,
