@@ -64,8 +64,8 @@ const AskJuris = () => {
 
   // Define custom components for ReactMarkdown
   const markdownComponents = {
-    h2: ({node, ...props}) => <h2 className={styles.markdownH2} {...props} />,
-    h3: ({node, ...props}) => <h3 className={styles.markdownH3} {...props} />,
+    h2: ({node, ...props}) => <h2 className={styles.markdownH2} {...props}>{props.children}</h2>,
+    h3: ({node, ...props}) => <h3 className={styles.markdownH3} {...props}>{props.children}</h3>,
     ul: ({node, ...props}) => <ul className={styles.markdownUl} {...props} />,
     ol: ({node, ...props}) => <ol className={styles.markdownOl} {...props} />,
     li: ({node, ...props}) => <li className={styles.markdownLi} {...props} />,
@@ -73,7 +73,7 @@ const AskJuris = () => {
     strong: ({node, ...props}) => <strong className={styles.markdownStrong} {...props} />,
     em: ({node, ...props}) => <em className={styles.markdownEm} {...props} />,
     code: ({node, ...props}) => <code className={styles.markdownCode} {...props} />,
-    a: ({node, ...props}) => <a className={styles.markdownA} {...props} />
+    a: ({node, ...props}) => <a className={styles.markdownA} {...props}>{props.children}</a>
   };
 
   return (
