@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+require('dotenv').config();
 
 exports.handler = async function(event, context) {
   // Set CORS headers
@@ -23,30 +24,40 @@ exports.handler = async function(event, context) {
     
     console.log("Received prompt:", prompt);
     
-    // Initialize the Google Generative AI with your API key
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+    // Initialize Gemini API
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not defined in environment variables");
+    }
     
-    // For text-only input, use the gemini-pro model
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     
-    // Prepare the prompt with context about legal information
-    const enhancedPrompt = `
-      You are a legal information assistant that provides general information about US law. 
-      Please respond to the following question with helpful legal information, formatted in Markdown.
-      Remember to emphasize that you're providing general legal information, not legal advice.
-      
-      User question: ${prompt}
-    `;
+    // Create a prompt with Canadian legal context and formatting instructions
+    const fullPrompt = `Act as a legal AI assistant named Juris. You specialize in Canadian law and legal consultation.
     
-    // Generate content using Google's Generative AI
-    const result = await model.generateContent(enhancedPrompt);
-    const response = await result.response;
-    const responseText = response.text();
+    Answer this legal question with accurate information based on Canadian federal and provincial laws. 
+    Include references to relevant statutes, cases, or regulations when appropriate.
+    
+    Format your response with these guidelines:
+    - Use clear headings with ## for main sections
+    - Use bullet points for lists
+    - Bold important terms or case names using **bold text**
+    - Keep paragraphs short and focused
+    - Use line breaks between paragraphs
+    - When citing laws, use a clear format like: *Criminal Code (R.S.C., 1985, c. C-46)*
+    
+    Question: ${prompt}`;
+    
+    // Generate content
+    const result = await model.generateContent(fullPrompt);
+    const response = result.response;
+    const text = response.text();
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(responseText)
+      body: JSON.stringify(text)
     };
   } catch (error) {
     console.error('Error:', error);
