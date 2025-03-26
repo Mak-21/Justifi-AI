@@ -10,6 +10,8 @@
   framework = "create-react-app"
   publish = "build"
 
+
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

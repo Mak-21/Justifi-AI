@@ -27,7 +27,7 @@ const AskJuris = () => {
       // Use serverless function endpoint
       const response = await axios.post('/.netlify/functions/chat', {
         prompt: input,
-      });
+      }, { timeout: 28000 });
     
       // Add the bot's response to the chat
       setShouldScroll(false);
