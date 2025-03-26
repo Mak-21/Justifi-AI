@@ -1,5 +1,5 @@
 [build]
-  command = "CI=false npm run build"
+  command = "npm run build"
   publish = "build"
   functions = "netlify/functions"
 
@@ -7,8 +7,8 @@
   command = "npm start"
   port = 8888
   targetPort = 3000
-  framework = "#custom"
-  autoLaunch = true
+  framework = "create-react-app"
+  publish = "build"
 
 [[redirects]]
   from = "/*"

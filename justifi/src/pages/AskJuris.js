@@ -29,14 +29,10 @@ const AskJuris = () => {
         prompt: input,
       });
     
-      // Log the response to see what's coming back
-      console.log("Response from API:", response);
-      
       // Add the bot's response to the chat
       setShouldScroll(false);
       const botMessage = {
-        // Make sure you're accessing the correct part of the response
-        text: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
+        text: response.data,
         sender: "bot",
       };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
@@ -46,11 +42,6 @@ const AskJuris = () => {
         text: "Oops! Something went wrong. Please try again.",
         sender: "bot",
       };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
-    } finally {
-      setIsLoading(false);
-      setInput("");
-    }
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setIsLoading(false);
