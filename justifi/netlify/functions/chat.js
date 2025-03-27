@@ -36,8 +36,10 @@ exports.handler = async function(event, context) {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-pro",
       generationConfig: {
-        maxOutputTokens: 1024, // Limit output size
-        temperature: 0.4 // Lower temperature for faster, more concise responses
+        maxOutputTokens: 800,     // Reduced from 1024
+        temperature: 0.2,         // Lower temperature for faster responses
+        topK: 20,                 // More focused token selection
+        topP: 0.8                 // More focused probability distribution
       }
     });
     
@@ -53,7 +55,7 @@ exports.handler = async function(event, context) {
     - Bold important terms or case names using **bold text**
     - Keep paragraphs short and focused
     - When citing laws, use a clear format like: *Criminal Code (R.S.C., 1985, c. C-46)*
-    
+    - Make sure to answer before 9 seconds
     Question: ${prompt}`;
     
     // Set a timeout for the API call
