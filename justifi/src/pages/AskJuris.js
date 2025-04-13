@@ -86,7 +86,7 @@ const AskJuris = () => {
         {messages.length === 0 ? (
           <div className={styles.welcomeMessage}>
             <p>Hello! I'm Juris, your legal AI assistant.</p>
-            <p>Ask me any legal question, and I'll do my best to help you with accurate information based on US federal law.</p>
+            <p>Ask me any legal question, and I'll do my best to help you with accurate information based on Canadian law.</p>
           </div>
         ) : (
           messages.map((message, index) => (
